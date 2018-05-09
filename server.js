@@ -5,27 +5,18 @@
 var express = require('express');
 var app = express();
 
-// we've started you off with Express, 
-// but feel free to use whatever libs or frameworks you'd like through `package.json`.
-
-// http://expressjs.com/en/starter/static-files.html
-app.use(express.static('public'));
-
-// http://expressjs.com/en/starter/basic-routing.html
-app.get("/", function (request, response) {
-  response.sendFile(__dirname + '/views/index.html');
-});
+app.get('/', (req, res) => res.redirect('/api/whoami'))
 app.set('trust proxy', true)
 app.get("/api/whoami", (req, res) => {
-  let ip = req.ip;
+  let ipaddress = req.ip;
   let language = req.header("Accept-Language").split(",")[0]
-  let agent = req.header("User-Agent").split("(")[1].split(")")[0]
+  let software = req.header("User-Agent").split("(")[1].split(")")[0]
   let result = {
-    ipaddress: ip,
-    language: language,
-    software: agent
+    ipaddress,
+    language,
+    software
   }
-  res.end(JSON.stringify(result))
+  res.json(result)
 })
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
